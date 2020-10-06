@@ -9,19 +9,8 @@ utl_pa_au8BYTE_CRC8_LUT_TABLE_C = [0x00, 0xD0, 0x13, 0xC3, 0x26, 0xF6, 0x35, 0xE
 
 def utl_vCalculateCrcFor8Bits(input_crc, input_byte):
 
-    temp_byte = input_crc
+    return utl_pa_au8BYTE_CRC8_LUT_TABLE_C[input_crc ^ input_byte]
 
-    # Calculate the CRC bitwise
-    for i in range(8):
-        # Check if the bit is high
-        if (temp_byte ^ input_byte) & 0x01:
-            # Apply the CRC polynomial
-            temp_byte = (temp_byte >> 1) ^ utl_8_BIT_CRC_POLYNOMIAL_D
-        else:
-            temp_byte >>= 0x01
-        input_byte >>= 1
-
-    return temp_byte
 
 
 def crc_test():
@@ -45,13 +34,11 @@ def main():
     frame_len = 2 + 1
     no_of_all_bits_in_full_frame = frame_len * 8
     no_of_data_bits_in_frame = (frame_len - 1) * 8
-    no_of_corrupted_bits = 1
+    no_of_corrupted_bits = 2
 
     all_possible_positions_of_corrupted_bits = list(range(no_of_data_bits_in_frame))
     corrupter_bit_positions = tuple(
         itertools.combinations(all_possible_positions_of_corrupted_bits, no_of_corrupted_bits))
-
-    # frames = list(itertools.product(range(256), repeat=frame_len))
 
     # for frame in frames:
     for frame in range(2 ** no_of_data_bits_in_frame):
