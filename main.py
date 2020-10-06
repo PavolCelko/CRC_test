@@ -1,5 +1,6 @@
 import itertools
 from builtins import hex
+import time
 from typing import Any, Union
 
 utl_8_BIT_CRC_POLYNOMIAL_D = 0xD9
@@ -37,13 +38,14 @@ def crc_test():
 
 def main():
     print(" *** START OF TEST *** ")
+    start_time = time.time()
 
     fail_counter = 0
 
     frame_len = 2 + 1
     no_of_all_bits_in_full_frame = frame_len * 8
     no_of_data_bits_in_frame = (frame_len - 1) * 8
-    no_of_corrupted_bits = 4
+    no_of_corrupted_bits = 1
 
     all_possible_positions_of_corrupted_bits = list(range(no_of_data_bits_in_frame))
     corrupter_bit_positions = tuple(
@@ -83,8 +85,12 @@ def main():
                 # print("{:d} {:d} {:d}".format(tx_full_frame, rx_full_frame, crc))
                 fail_counter += 1
 
-    print(len(corrupter_bit_positions))
-    print(fail_counter)
+    print("{:d} bits of total {:d} data bits corrupted".format(no_of_corrupted_bits, no_of_data_bits_in_frame))
+    print("{:d} combinations of corrupted bits positions".format(len(corrupter_bit_positions)))
+    print("{:d} corrupted frames not reveled".format(fail_counter))
+
+    print(" *** END OF TEST *** ")
+    print(" test duration {:0.2f}".format(time.time() - start_time))
 
     return
 
